@@ -61,16 +61,17 @@ jobs:
         $issue = 'https://api.github.com/repos/azure/dotnet-extensions-experimental/issues/1'
         $sendpr = .\azure-extensions\.github\workflows\ReportDiff.ps1
         echo "sendpr=$sendpr" >> $env:GITHUB_OUTPUT
-    - name: Send PR
+    - name: GIT commit and push all changed files
       if: steps.check.outputs.sendpr == 'true'
-      # https://github.com/marketplace/actions/create-pull-request
-      uses: dotnet/actions-create-pull-request@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: .\azure-extensions
-        commit-message: 'Sync shared code from dotnet/extensions'
-        title: 'Sync shared code from dotnet/extensions'
-        body: 'This PR was automatically generated to sync shared code changes from dotnet/extensions. Fixes #1.'
-        base: main
-        branch: github-action/sync-dotnet-extensions
-        branch-suffix: timestamp
+      shell: cmd
+      working-directory: .\azure-extensions\
+      env:
+        CI_COMMIT_MESSAGE: Sync shared code from dotnet/extensions
+        CI_COMMIT_AUTHOR: DotNet Sync - Github Actions
+      # The prior powershell script created the branch
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "GithubActions@users.noreply.github.com"
+        git config push.autoSetupRemote true
+        git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
