@@ -7,7 +7,6 @@ using System.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options.Validation;
 using Microsoft.Shared.Diagnostics;
 
 namespace Microsoft.Azure.Extensions.AmbientMetadata.ServiceFabric;
